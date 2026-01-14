@@ -31,8 +31,8 @@ const DocumentHub = () => {
       description: 'Keputusan Kepala BGN nomor 244 tahun 2025',
       category: 'Panduan',
       type: 'ppt',
-      thumbnail: '/images/Screenshot 2026-01-14 094429.png',
-      downloadUrl: 'https://drive.google.com/uc?export=download&id=1K47O4VKWSHHgQASDZFzaQMOvrhf3KOTv'
+      thumbnail: '/images/thumbnail mbg syarat.png',
+      downloadUrl: 'https://drive.google.com/uc?export=download&id=1FG3rRqt4eO-wKf70zIHq7C4kSBDqUm9F'
     },
     {
       id: 4,
