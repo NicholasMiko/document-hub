@@ -9,8 +9,8 @@ const DocumentHub = () => {
   const [documents] = useState([
     {
       id: 1,
-      title: 'Fasilitas Kredit Investasi SPPG Program Makan Bergizi Gratis',
-      description: 'Buku Saku',
+      title: 'Buku Saku Fasilitas Kredit Investasi SPPG Program Makan Bergizi Gratis',
+      description: 'Business Banking Division',
       category: 'Tutorial',
       type: 'pdf',
       thumbnail: '/images/Screenshot 2026-01-14 083552.png',
@@ -18,7 +18,7 @@ const DocumentHub = () => {
     },
     {
       id: 2,
-      title: 'Fasilitas Kredit Investasi SPPG Program Makan Bergizi Gratis',
+      title: 'Presentasi Fasilitas Kredit Investasi SPPG Program Makan Bergizi Gratis',
       description: 'Business Banking Division & Wholesale Credit Risk Divison',
       category: 'Tutorial',
       type: 'pdf',
