@@ -18,7 +18,7 @@ const DocumentHub = () => {
     },
     {
       id: 2,
-      title: 'Presentasi Fasilitas Kredit Investasi SPPG Program Makan Bergizi Gratis',
+      title: 'Materi Fasilitas Kredit Investasi SPPG Program Makan Bergizi Gratis Untuk Internal',
       description: 'Business Banking Division & Wholesale Credit Risk Divison',
       category: 'Panduan',
       type: 'pdf',
@@ -27,7 +27,7 @@ const DocumentHub = () => {
     },
     {
       id: 3,
-      title: 'Regulasi Program Makan Bergizi Gratis 2025',
+      title: 'Materi Fasilitas Kredit Investasi SPPG Program Makan Bergizi Gratis Dengan Regulasi Eksternal (Keputusan Kepala BGN)',
       description: 'Keputusan Kepala BGN nomor 244 tahun 2025',
       category: 'Panduan',
       type: 'ppt',
