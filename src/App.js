@@ -9,30 +9,30 @@ const DocumentHub = () => {
   const [documents] = useState([
     {
       id: 1,
-      title: 'Panduan Lengkap Marketing Digital',
-      description: 'Strategi dan tips untuk memaksimalkan marketing digital',
+      title: 'Fasilitas Kredit Investasi SPPG Program Makan Bergizi Gratis',
+      description: 'Buku Saku',
       category: 'Tutorial',
-      type: 'ppt',
-      thumbnail: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=400&h=250&fit=crop',
-      downloadUrl: '#'
+      type: 'pdf',
+      thumbnail: '/images/Screenshot 2026-01-14 083552.png',
+      downloadUrl: 'https://drive.google.com/uc?export=download&id=1SsVLKzgV656I-vWdRjDkc14QrmT5pgcl'
     },
     {
       id: 2,
-      title: 'Data Penjualan Q4 2025',
-      description: 'Laporan dan analisis penjualan kuartal 4',
-      category: 'Data',
-      type: 'excel',
-      thumbnail: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=250&fit=crop',
-      downloadUrl: '#'
+      title: 'Fasilitas Kredit Investasi SPPG Program Makan Bergizi Gratis',
+      description: 'Business Banking Division & Wholesale Credit Risk Divison',
+      category: 'Tutorial',
+      type: 'pdf',
+      thumbnail: '/images/Screenshot 2026-01-14 090843.png',
+      downloadUrl: 'https://drive.google.com/uc?export=download&id=18HM6SGVKQzosvAbhIr8rZElqpB1x95dB'
     },
     {
       id: 3,
-      title: 'Memo Kebijakan Baru',
-      description: 'Kebijakan perusahaan terbaru untuk 2026',
-      category: 'Memo',
-      type: 'pdf',
-      thumbnail: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=400&h=250&fit=crop',
-      downloadUrl: '#'
+      title: 'Regulasi Program Makan Bergizi Gratis 2025',
+      description: 'Keputusan Kepala BGN nomor 244 tahun 2025',
+      category: 'Tutorial',
+      type: 'ppt',
+      thumbnail: '/images/Screenshot 2026-01-14 094429.png',
+      downloadUrl: 'https://drive.google.com/uc?export=download&id=1K47O4VKWSHHgQASDZFzaQMOvrhf3KOTv'
     },
     {
       id: 4,
@@ -100,14 +100,32 @@ const DocumentHub = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <h1 className="text-3xl font-bold text-gray-900">Document Hub</h1>
-          <p className="mt-2 text-gray-600">Infografis, Panduan, dan Informasi Penting</p>
-        </div>
-      </header>
-
+     {/* Header */}
+<header className="bg-white border-b border-gray-200">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div className="flex items-center justify-between">
+      {/* Kiri - Title */}
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900">Keperluan Dokumen Program MBG</h1>
+        <p className="mt-2 text-gray-600">Berisi Panduan, Data, dan Memo.</p>
+      </div>
+      
+      {/* Kanan - Logos */}
+      <div className="flex items-center gap-4">
+        <img 
+          src="/images/danantara.png" 
+          alt="Logo 1" 
+          className="h-12 w-auto"
+        />
+        <img 
+          src="/images/BTN_2024.svg (1).png" 
+          alt="Logo 2" 
+          className="h-12 w-auto"
+        />
+      </div>
+    </div>
+  </div>
+</header>
       {/* Search & Filter Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col sm:flex-row gap-4 mb-8">
