@@ -11,7 +11,7 @@ const DocumentHub = () => {
       id: 1,
       title: 'Buku Saku Fasilitas Kredit Investasi SPPG Program Makan Bergizi Gratis',
       description: 'Business Banking Division',
-      category: 'Tutorial',
+      category: 'Panduan',
       type: 'pdf',
       thumbnail: '/images/Screenshot 2026-01-14 083552.png',
       downloadUrl: 'https://drive.google.com/uc?export=download&id=1SsVLKzgV656I-vWdRjDkc14QrmT5pgcl'
@@ -20,7 +20,7 @@ const DocumentHub = () => {
       id: 2,
       title: 'Presentasi Fasilitas Kredit Investasi SPPG Program Makan Bergizi Gratis',
       description: 'Business Banking Division & Wholesale Credit Risk Divison',
-      category: 'Tutorial',
+      category: 'Panduan',
       type: 'pdf',
       thumbnail: '/images/Screenshot 2026-01-14 090843.png',
       downloadUrl: 'https://drive.google.com/uc?export=download&id=18HM6SGVKQzosvAbhIr8rZElqpB1x95dB'
@@ -29,7 +29,7 @@ const DocumentHub = () => {
       id: 3,
       title: 'Regulasi Program Makan Bergizi Gratis 2025',
       description: 'Keputusan Kepala BGN nomor 244 tahun 2025',
-      category: 'Tutorial',
+      category: 'Panduan',
       type: 'ppt',
       thumbnail: '/images/Screenshot 2026-01-14 094429.png',
       downloadUrl: 'https://drive.google.com/uc?export=download&id=1K47O4VKWSHHgQASDZFzaQMOvrhf3KOTv'
@@ -38,7 +38,7 @@ const DocumentHub = () => {
       id: 4,
       title: 'Infografis Tren Industri',
       description: 'Visualisasi tren industri tahun ini',
-      category: 'Infografis',
+      category: 'Memo',
       type: 'pdf',
       thumbnail: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=250&fit=crop',
       downloadUrl: '#'
@@ -47,7 +47,7 @@ const DocumentHub = () => {
       id: 5,
       title: 'Tutorial Excel Advanced',
       description: 'Fungsi-fungsi advanced untuk produktivitas',
-      category: 'Tutorial',
+      category: 'Memo',
       type: 'ppt',
       thumbnail: 'https://images.unsplash.com/photo-1551650975-87deedd944c3?w=400&h=250&fit=crop',
       downloadUrl: '#'
@@ -63,7 +63,7 @@ const DocumentHub = () => {
     }
   ]);
 
-  const categories = ['All', 'Tutorial', 'Data', 'Memo', 'Infografis'];
+  const categories = ['All', 'Panduan', 'Data', 'Memo'];
 
   const getFileIcon = (type) => {
     switch(type) {
