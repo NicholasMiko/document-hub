@@ -28,7 +28,7 @@ const DocumentHub = () => {
     {
       id: 3,
       title: 'Materi Fasilitas Kredit Investasi SPPG Program Makan Bergizi Gratis Dengan Regulasi Eksternal (Keputusan Kepala BGN)',
-      description: 'Keputusan Kepala BGN nomor 244 tahun 2025',
+      description: 'Regulasi Bank BTN & Keputusan Kepala BGN nomor 244 tahun 2025',
       category: 'Panduan',
       type: 'ppt',
       thumbnail: '/images/thumbnail mbg syarat.png',
@@ -36,12 +36,12 @@ const DocumentHub = () => {
     },
     {
       id: 4,
-      title: 'Infografis Tren Industri',
-      description: 'Visualisasi tren industri tahun ini',
-      category: 'Memo',
+      title: 'SK-Nomor-244-Tahun-2025-tentang-Perubahan-Ketiga-atas-Peyunjuk-TeknisPenyelenggaraan-Banper-untuk-Program-MBG',
+      description: 'Keputusan Kepala BGN nomor 244 tahun 2025',
+      category: 'Data',
       type: 'pdf',
-      thumbnail: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=250&fit=crop',
-      downloadUrl: '#'
+      thumbnail: '/images/Screenshot 2026-01-15 151432.png',
+      downloadUrl: 'https://drive.google.com/file/d/1GIo0c0FnFREiN0tUXNOF5lol41M6z1YF/view?usp=sharing'
     },
     {
       id: 5,
