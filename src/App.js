@@ -378,8 +378,8 @@ const DocumentHub = () => {
       )}
 
       {showDocForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto p-4">
-          <div className="bg-white p-6 rounded-lg max-w-2xl w-full my-8">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+  <div className="bg-white p-6 rounded-lg max-w-2xl w-full my-8 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">{editingDoc ? 'Edit Dokumen' : 'Tambah Dokumen Baru'}</h2>
               <button onClick={resetForm}>
