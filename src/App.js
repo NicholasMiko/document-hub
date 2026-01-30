@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Download, FileText, FileSpreadsheet, Presentation, Search, Plus, Edit2, Trash2, X, Settings } from 'lucide-react';
+import { Download, FileText, FileSpreadsheet, Presentation, Search, Plus, Edit2, Trash2, X, Settings, Upload } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
 import { supabase } from './supabaseClient';
 
 const DocumentHub = () => {
-  // Admin state
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [adminPassword, setAdminPassword] = useState('');
@@ -19,12 +18,11 @@ const DocumentHub = () => {
   const [passwordInput, setPasswordInput] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [uploadingFile, setUploadingFile] = useState(false);
 
-  // Documents from Supabase
   const [documents, setDocuments] = useState([]);
   const [loadingDocs, setLoadingDocs] = useState(true);
 
-  // Form state
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -35,7 +33,10 @@ const DocumentHub = () => {
     download_url: ''
   });
 
-  // Load documents from Supabase
+  // File states
+  const [thumbnailFile, setThumbnailFile] = useState(null);
+  const [documentFile, setDocumentFile] = useState(null);
+
   useEffect(() => {
     fetchDocuments();
   }, []);
@@ -79,7 +80,6 @@ const DocumentHub = () => {
     }
   };
 
-  // Admin login
   const handleAdminLogin = (e) => {
     e.preventDefault();
     if (adminPassword === 'admin123') {
@@ -92,38 +92,81 @@ const DocumentHub = () => {
     }
   };
 
-  // Add/Edit document
+  // Upload file to Supabase Storage
+  const uploadFile = async (file, bucket) => {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`;
+    const filePath = fileName;
+
+    const { data, error } = await supabase.storage
+      .from(bucket)
+      .upload(filePath, file);
+
+    if (error) throw error;
+
+    const { data: { publicUrl } } = supabase.storage
+      .from(bucket)
+      .getPublicUrl(filePath);
+
+    return publicUrl;
+  };
+
   const handleSaveDocument = async (e) => {
     e.preventDefault();
+    
     try {
+      setUploadingFile(true);
+      
+      let thumbnailUrl = formData.thumbnail;
+      let documentUrl = formData.download_url;
+
+      // Upload thumbnail if file selected
+      if (thumbnailFile) {
+        toast.loading('Uploading thumbnail...');
+        thumbnailUrl = await uploadFile(thumbnailFile, 'thumbnails');
+        toast.dismiss();
+      }
+
+      // Upload document if file selected
+      if (documentFile) {
+        toast.loading('Uploading document...');
+        documentUrl = await uploadFile(documentFile, 'documents');
+        toast.dismiss();
+      }
+
+      const docData = {
+        ...formData,
+        thumbnail: thumbnailUrl,
+        download_url: documentUrl
+      };
+
       if (editingDoc) {
-        // Update existing
         const { error } = await supabase
           .from('documents')
-          .update(formData)
+          .update(docData)
           .eq('id', editingDoc.id);
 
         if (error) throw error;
         toast.success('Dokumen berhasil diupdate!');
       } else {
-        // Add new
         const { error } = await supabase
           .from('documents')
-          .insert([formData]);
+          .insert([docData]);
 
         if (error) throw error;
         toast.success('Dokumen berhasil ditambahkan!');
       }
       
-      fetchDocuments(); // Refresh list
+      fetchDocuments();
       resetForm();
     } catch (error) {
       console.error('Error saving document:', error);
-      toast.error('Gagal menyimpan dokumen');
+      toast.error('Gagal menyimpan dokumen: ' + error.message);
+    } finally {
+      setUploadingFile(false);
     }
   };
 
-  // Delete document
   const handleDeleteDocument = async (id) => {
     if (window.confirm('Yakin ingin menghapus dokumen ini?')) {
       try {
@@ -135,7 +178,7 @@ const DocumentHub = () => {
         if (error) throw error;
         
         toast.success('Dokumen berhasil dihapus!');
-        fetchDocuments(); // Refresh list
+        fetchDocuments();
       } catch (error) {
         console.error('Error deleting document:', error);
         toast.error('Gagal menghapus dokumen');
@@ -143,7 +186,6 @@ const DocumentHub = () => {
     }
   };
 
-  // Edit document
   const handleEditDocument = (doc) => {
     setEditingDoc(doc);
     setFormData({
@@ -168,11 +210,12 @@ const DocumentHub = () => {
       thumbnail: '',
       download_url: ''
     });
+    setThumbnailFile(null);
+    setDocumentFile(null);
     setEditingDoc(null);
     setShowDocForm(false);
   };
 
-  // Handle menu click
   const handleMenuClick = (menu) => {
     if (menu === 'Internal' && !internalAccessGranted) {
       setSelectedMenu(menu);
@@ -185,7 +228,6 @@ const DocumentHub = () => {
     }
   };
 
-  // Handle password submit
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -215,7 +257,6 @@ const DocumentHub = () => {
     }
   };
 
-  // Filter documents
   const filteredDocuments = documents.filter(doc => {
     const matchesMenu = doc.menu === selectedMenu;
     const matchesCategory = selectedCategory === 'All' || doc.category === selectedCategory;
@@ -228,7 +269,6 @@ const DocumentHub = () => {
     <div className="min-h-screen bg-gray-50">
       <Toaster position="top-right" />
       
-      {/* Header */}
       <header className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
@@ -251,7 +291,6 @@ const DocumentHub = () => {
         </div>
       </header>
 
-      {/* Admin Login Modal */}
       {showAdminLogin && !isAdmin && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4">
@@ -278,11 +317,10 @@ const DocumentHub = () => {
         </div>
       )}
 
-      {/* Admin Panel Toggle */}
       {isAdmin && (
         <div className="bg-green-600 text-white py-2 px-4 text-center">
           <div className="max-w-7xl mx-auto flex justify-between items-center">
-            <span>🔧 Mode Admin Aktif - Connected to Supabase</span>
+            <span>🔧 Mode Admin Aktif - Upload System Ready</span>
             <button
               onClick={() => setShowAdminPanel(!showAdminPanel)}
               className="bg-white text-green-600 px-4 py-1 rounded hover:bg-gray-100"
@@ -293,7 +331,6 @@ const DocumentHub = () => {
         </div>
       )}
 
-      {/* Admin Panel */}
       {isAdmin && showAdminPanel && (
         <div className="bg-white border-b border-gray-200 py-6">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -308,7 +345,6 @@ const DocumentHub = () => {
               </button>
             </div>
 
-            {/* Document List */}
             {loadingDocs ? (
               <div className="text-center py-8">Loading documents...</div>
             ) : (
@@ -341,10 +377,9 @@ const DocumentHub = () => {
         </div>
       )}
 
-      {/* Add/Edit Document Form */}
       {showDocForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto">
-          <div className="bg-white p-6 rounded-lg max-w-2xl w-full mx-4 my-8">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto p-4">
+          <div className="bg-white p-6 rounded-lg max-w-2xl w-full my-8">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">{editingDoc ? 'Edit Dokumen' : 'Tambah Dokumen Baru'}</h2>
               <button onClick={resetForm}>
@@ -409,41 +444,65 @@ const DocumentHub = () => {
                   <option value="Eksternal">Eksternal</option>
                 </select>
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">URL Thumbnail</label>
+
+              {/* THUMBNAIL UPLOAD */}
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                <label className="block text-sm font-medium mb-2">Upload Thumbnail</label>
                 <input
-                  type="text"
-                  value={formData.thumbnail}
-                  onChange={(e) => setFormData({...formData, thumbnail: e.target.value})}
-                  className="w-full px-4 py-2 border rounded-lg"
-                  placeholder="/images/nama-file.png"
-                  required
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setThumbnailFile(e.target.files[0])}
+                  className="w-full"
                 />
-                <p className="text-xs text-gray-500 mt-1">Upload gambar ke folder public/images/, lalu tulis: /images/nama-file.png</p>
+                {thumbnailFile && (
+                  <p className="text-sm text-green-600 mt-2">✓ {thumbnailFile.name}</p>
+                )}
+                {formData.thumbnail && !thumbnailFile && (
+                  <p className="text-sm text-gray-500 mt-2">Current: {formData.thumbnail}</p>
+                )}
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">URL Download</label>
+
+              {/* DOCUMENT UPLOAD */}
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                <label className="block text-sm font-medium mb-2">Upload Dokumen (PDF/PPT/Excel)</label>
                 <input
-                  type="text"
-                  value={formData.download_url}
-                  onChange={(e) => setFormData({...formData, download_url: e.target.value})}
-                  className="w-full px-4 py-2 border rounded-lg"
-                  placeholder="https://drive.google.com/uc?export=download&id=..."
-                  required
+                  type="file"
+                  accept=".pdf,.ppt,.pptx,.xls,.xlsx"
+                  onChange={(e) => setDocumentFile(e.target.files[0])}
+                  className="w-full"
                 />
-                <p className="text-xs text-gray-500 mt-1">Gunakan format direct download dari Google Drive</p>
+                {documentFile && (
+                  <p className="text-sm text-green-600 mt-2">✓ {documentFile.name}</p>
+                )}
+                {formData.download_url && !documentFile && (
+                  <p className="text-sm text-gray-500 mt-2">Current: {formData.download_url}</p>
+                )}
+                <p className="text-xs text-gray-500 mt-2">Atau bisa tetap pakai link Google Drive</p>
               </div>
+
               <div className="flex gap-2 pt-4">
                 <button
                   type="submit"
-                  className="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
+                  disabled={uploadingFile}
+                  className="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 flex items-center justify-center gap-2"
                 >
-                  {editingDoc ? 'Update Dokumen' : 'Tambah Dokumen'}
+                  {uploadingFile ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      Uploading...
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="w-4 h-4" />
+                      {editingDoc ? 'Update Dokumen' : 'Tambah Dokumen'}
+                    </>
+                  )}
                 </button>
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="px-6 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300"
+                  disabled={uploadingFile}
+                  className="px-6 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 disabled:bg-gray-100"
                 >
                   Batal
                 </button>
@@ -453,7 +512,6 @@ const DocumentHub = () => {
         </div>
       )}
 
-      {/* Menu Tabs */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="flex space-x-4">
@@ -474,7 +532,6 @@ const DocumentHub = () => {
         </div>
       </div>
 
-      {/* Password Form for Internal */}
       {selectedMenu === 'Internal' && !internalAccessGranted && (
         <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md border border-gray-300">
           <form onSubmit={handlePasswordSubmit}>
@@ -502,10 +559,8 @@ const DocumentHub = () => {
         </div>
       )}
 
-      {/* Documents View */}
       {(selectedMenu === 'Eksternal' || internalAccessGranted) && (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          {/* Filters */}
           <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0 mb-4">
             {categories.map(category => (
               <button
@@ -522,7 +577,6 @@ const DocumentHub = () => {
             ))}
           </div>
 
-          {/* Search */}
           <div className="flex mb-8">
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -536,7 +590,6 @@ const DocumentHub = () => {
             </div>
           </div>
 
-          {/* Loading State */}
           {loadingDocs && (
             <div className="text-center py-12">
               <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -544,7 +597,6 @@ const DocumentHub = () => {
             </div>
           )}
 
-          {/* Documents Grid */}
           {!loadingDocs && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredDocuments.map(doc => (
@@ -580,7 +632,6 @@ const DocumentHub = () => {
             </div>
           )}
 
-          {/* Empty State */}
           {!loadingDocs && filteredDocuments.length === 0 && (
             <div className="text-center py-12">
               <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
