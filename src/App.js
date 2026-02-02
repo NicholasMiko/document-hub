@@ -63,19 +63,17 @@ const DocumentHub = () => {
 
   const getFileIcon = (type) => {
     switch(type) {
-      case 'ppt': return <Presentation className="w-5 h-5" />;
-      case 'excel': return <FileSpreadsheet className="w-5 h-5" />;
-      case 'pdf': return <FileText className="w-5 h-5" />;
-      default: return <FileText className="w-5 h-5" />;
+      case 'ppt': return <Presentation size={20} />;
+      case 'excel': return <FileSpreadsheet size={20} />;
+      default: return <FileText size={20} />;
     }
   };
 
   const getFileColor = (type) => {
     switch(type) {
-      case 'ppt': return 'bg-orange-100 text-orange-600';
-      case 'excel': return 'bg-green-100 text-green-600';
-      case 'pdf': return 'bg-red-100 text-red-600';
-      default: return 'bg-gray-100 text-gray-600';
+      case 'ppt': return 'bg-orange-50 text-orange-600';
+      case 'excel': return 'bg-green-50 text-green-600';
+      default: return 'bg-red-50 text-red-600';
     }
   };
 
@@ -104,8 +102,8 @@ const DocumentHub = () => {
     e.preventDefault();
     if (!documentFile && !formData.download_url) return toast.error('Pilih file atau isi link!');
 
-    const MAX_IMG_SIZE = 10 * 1024 * 1024; // 10MB
-    const MAX_DOC_SIZE = 40 * 1024 * 1024; // 40MB
+    const MAX_IMG_SIZE = 10 * 1024 * 1024;
+    const MAX_DOC_SIZE = 40 * 1024 * 1024;
 
     if (thumbnailFile && thumbnailFile.size > MAX_IMG_SIZE) return toast.error('Gambar max 10MB!');
     if (documentFile && documentFile.size > MAX_DOC_SIZE) return toast.error('File max 40MB!');
@@ -131,7 +129,7 @@ const DocumentHub = () => {
         : await supabase.from('documents').insert([docData]);
 
       if (error) throw error;
-      toast.success('Berhasil!');
+      toast.success('Berhasil disimpan!');
       fetchDocuments();
       resetForm();
     } catch (error) {
@@ -198,45 +196,52 @@ const DocumentHub = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
+    <div className="min-h-screen bg-white text-slate-900" style={{ fontFamily: '"Inter", "Segoe UI", Tahoma, sans-serif' }}>
       <Toaster position="top-right" />
       
-      {/* HEADER */}
-      <header className="bg-white border-b sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      {/* HEADER: GAP DIKECILIN */}
+      <header className="bg-white border-b sticky top-0 z-40 shadow-sm">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-blue-900">Resource Hub Program MBG</h1>
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Bank BTN Official</p>
+            <h1 className="text-3xl font-bold text-blue-900 leading-tight">
+              Resource and Archive Access for MBG Program
+            </h1>
+            <p className="text-sm font-semibold text-slate-400 tracking-wide uppercase">
+              Bank BTN
+            </p>
           </div>
-          <div className="flex items-center gap-4">
-            <button onClick={() => setShowAdminLogin(true)} className="p-2 text-gray-300 hover:text-blue-600 transition-colors"><Settings size={20}/></button>
-            <img src="/images/danantara.png" alt="Logo" className="h-8" />
-            <img src="/images/BTN_2024.svg (1).png" alt="Logo" className="h-8" />
+          <div className="flex items-center gap-5">
+            <button onClick={() => setShowAdminLogin(true)} className="p-2 text-slate-300 hover:text-blue-600 transition-all">
+              <Settings size={24}/>
+            </button>
+            <img src="/images/bgn.png" alt="BGN" className="h-10 w-auto object-contain" />
+            <img src="/images/danantara.png" alt="Danantara" className="h-10 w-auto object-contain" />
+            <img src="/images/BTN_2024.svg (1).png" alt="BTN" className="h-10 w-auto object-contain" />
           </div>
         </div>
       </header>
 
       {isAdmin && (
-        <div className="bg-yellow-400 text-blue-900 py-1.5 text-center text-[10px] font-black tracking-widest">
-          ADMIN MODE — <button onClick={() => setShowAdminPanel(!showAdminPanel)} className="underline">PANEL KONTROL</button>
+        <div className="bg-amber-400 text-amber-900 py-2 text-center text-xs font-bold uppercase tracking-wider">
+          ADMIN MODE — <button onClick={() => setShowAdminPanel(!showAdminPanel)} className="underline hover:text-black">Panel Kontrol</button>
         </div>
       )}
 
       {/* ADMIN PANEL */}
       {isAdmin && showAdminPanel && (
-        <div className="max-w-7xl mx-auto p-6 bg-white border-b shadow-sm">
-          <div className="flex justify-between items-center mb-6">
+        <div className="max-w-7xl mx-auto p-6 bg-slate-50 border-b">
+          <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-bold">Database Dokumen</h2>
-            <button onClick={() => setShowDocForm(true)} className="bg-blue-600 text-white px-5 py-2 rounded-xl flex gap-2 items-center hover:bg-blue-700 font-bold text-sm">
+            <button onClick={() => setShowDocForm(true)} className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700 font-bold transition-all shadow-md">
               <Plus size={18} /> Tambah Data
             </button>
           </div>
           <div className="grid grid-cols-1 gap-2 max-h-60 overflow-y-auto pr-2">
             {documents.map(doc => (
-              <div key={doc.id} className="flex justify-between items-center p-3 bg-gray-50 rounded-xl border">
+              <div key={doc.id} className="flex justify-between items-center p-3 bg-white rounded-lg border border-slate-200">
                 <div className="flex flex-col">
-                  <span className="font-bold text-sm">{doc.title}</span>
-                  <span className="text-[9px] text-gray-400 uppercase font-black">{doc.menu} • {doc.category}</span>
+                  <span className="font-bold text-sm text-slate-700">{doc.title}</span>
+                  <span className="text-[10px] text-slate-400 uppercase font-bold">{doc.menu} • {doc.category}</span>
                 </div>
                 <div className="flex gap-1">
                   <button onClick={() => handleEditDocument(doc)} className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg"><Edit2 size={16} /></button>
@@ -248,117 +253,129 @@ const DocumentHub = () => {
         </div>
       )}
 
-      {/* MODAL FORM (FIXED SCROLL) */}
+      {/* MODAL FORM */}
       {showDocForm && (
-        <div className="fixed inset-0 bg-blue-900/40 backdrop-blur-sm flex items-start justify-center z-[60] p-4 overflow-y-auto">
-          <div className="bg-white p-8 rounded-[2rem] max-w-2xl w-full my-8 shadow-2xl relative border">
-            <div className="flex justify-between items-center mb-8 sticky top-0 bg-white/90 backdrop-blur-md py-2 border-b z-10">
-              <h2 className="text-2xl font-black text-gray-800 tracking-tight">{editingDoc ? 'Update' : 'Upload'} Dokumen</h2>
-              <button onClick={resetForm} className="p-2 hover:bg-gray-100 rounded-full"><X /></button>
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-start justify-center z-[60] p-4 overflow-y-auto">
+          <div className="bg-white p-8 rounded-2xl max-w-2xl w-full my-8 shadow-2xl relative border border-slate-200">
+            <div className="flex justify-between items-center mb-6 sticky top-0 bg-white/95 py-2 border-b z-10">
+              <h2 className="text-xl font-bold text-slate-800 tracking-tight">{editingDoc ? 'Update' : 'Upload'} Dokumen</h2>
+              <button onClick={resetForm} className="p-2 hover:bg-slate-100 rounded-full transition-colors"><X /></button>
             </div>
-            
-            <form onSubmit={handleSaveDocument} className="space-y-6 pb-6">
-              <input placeholder="Nama Dokumen" className="w-full p-3.5 bg-gray-50 border rounded-2xl outline-none" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} required />
-              <textarea placeholder="Keterangan" className="w-full p-3.5 bg-gray-50 border rounded-2xl outline-none" rows="2" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} />
+            <form onSubmit={handleSaveDocument} className="space-y-5 pb-4">
+              <input placeholder="Nama Dokumen" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-600" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} required />
+              <textarea placeholder="Keterangan Dokumen" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-600" rows="2" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} />
               <div className="grid grid-cols-2 gap-4">
-                <select className="p-3.5 bg-gray-50 border rounded-2xl outline-none" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})}>
+                <select className="p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})}>
                   {categories.filter(c => c !== 'All').map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
-                <select className="p-3.5 bg-gray-50 border rounded-2xl outline-none" value={formData.type} onChange={e => setFormData({...formData, type: e.target.value})}>
+                <select className="p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none" value={formData.type} onChange={e => setFormData({...formData, type: e.target.value})}>
                   <option value="pdf">PDF</option><option value="ppt">PPT</option><option value="excel">Excel</option>
                 </select>
               </div>
-              <select className="w-full p-3.5 bg-gray-50 border rounded-2xl outline-none font-bold text-blue-700" value={formData.menu} onChange={e => setFormData({...formData, menu: e.target.value})}>
+              <select className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-blue-700" value={formData.menu} onChange={e => setFormData({...formData, menu: e.target.value})}>
                 <option value="Internal">INTERNAL ACCESS</option><option value="Eksternal">PUBLIC ACCESS</option>
               </select>
-              
-              <div className="p-6 border-2 border-dashed border-blue-100 rounded-[2rem] bg-blue-50/30">
-                 <span className="text-[10px] font-black text-blue-600 block mb-3 uppercase tracking-widest">Opsi A: Upload File (Max 40MB)</span>
-                 <input type="file" className="text-xs w-full text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-blue-600 file:text-white" onChange={e => setDocumentFile(e.target.files[0])} />
-                 <div className="flex items-center gap-3 my-4"><div className="h-px bg-blue-100 flex-1"></div><span className="text-[9px] text-blue-300 font-black">ATAU</span><div className="h-px bg-blue-100 flex-1"></div></div>
-                 <span className="text-[10px] font-black text-blue-600 block mb-3 uppercase tracking-widest">Opsi B: Link Google Drive</span>
-                 <input placeholder="https://drive.google.com/..." className="w-full p-3.5 bg-white border rounded-2xl text-sm outline-none" value={formData.download_url} onChange={e => setFormData({...formData, download_url: e.target.value})} />
+              <div className="p-5 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50/50">
+                 <span className="text-[11px] font-bold text-slate-500 block mb-3 uppercase tracking-wider">Opsi A: Upload File (Max 40MB)</span>
+                 <input type="file" className="text-sm w-full file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-slate-700 file:text-white hover:file:bg-black transition-all" onChange={e => setDocumentFile(e.target.files[0])} />
+                 <div className="flex items-center gap-3 my-4"><div className="h-px bg-slate-200 flex-1"></div><span className="text-[10px] text-slate-400 font-bold">ATAU</span><div className="h-px bg-slate-200 flex-1"></div></div>
+                 <span className="text-[11px] font-bold text-slate-500 block mb-3 uppercase tracking-wider">Opsi B: Link Google Drive</span>
+                 <input placeholder="https://drive.google.com/..." className="w-full p-3 bg-white border border-slate-200 rounded-xl text-sm" value={formData.download_url} onChange={e => setFormData({...formData, download_url: e.target.value})} />
               </div>
-
-              <div className="p-5 border rounded-[2rem] bg-white">
-                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Gambar Preview (Max 10MB)</label>
-                <input type="file" accept="image/*" onChange={e => setThumbnailFile(e.target.files[0])} />
-              </div>
-
-              <button type="submit" disabled={uploadingFile} className="w-full bg-blue-700 text-white py-4 rounded-2xl font-black text-xs tracking-widest">
-                {uploadingFile ? 'MEMPROSES...' : 'PUBLIKASIKAN DOKUMEN'}
+              <button type="submit" disabled={uploadingFile} className="w-full bg-blue-600 text-white py-4 rounded-xl font-bold tracking-wide shadow-lg hover:bg-blue-700 active:scale-[0.98] transition-all">
+                {uploadingFile ? 'MEMPROSES...' : 'PUBLIKASIKAN SEKARANG'}
               </button>
             </form>
           </div>
         </div>
       )}
 
-      {/* ADMIN LOGIN */}
-      {showAdminLogin && (
-        <div className="fixed inset-0 bg-blue-950/80 backdrop-blur-md flex items-center justify-center z-[70] p-4">
-          <div className="bg-white p-8 rounded-[2.5rem] w-full max-w-sm shadow-2xl">
-            <h2 className="font-black text-xl text-center mb-6">System Access</h2>
-            <form onSubmit={handleAdminLogin} className="space-y-4">
-              <input autoFocus type="password" placeholder="••••••••" className="w-full p-4 bg-gray-50 rounded-2xl text-center text-2xl tracking-[0.5em] outline-none border" value={adminPassword} onChange={e => setAdminPassword(e.target.value)} />
-              <button type="submit" className="w-full bg-blue-600 text-white py-2.5 rounded-xl font-bold">LOGIN</button>
-              <button type="button" onClick={() => setShowAdminLogin(false)} className="w-full text-gray-400 text-[10px] font-bold uppercase py-2">Batal</button>
-            </form>
-          </div>
-        </div>
-      )}
-
       {/* MAIN CONTENT AREA */}
-      <main className="max-w-7xl mx-auto p-4 sm:p-10">
+      <main className="max-w-7xl mx-auto px-6 py-6">
         
-        {/* COMPACT NAV (ONE LINE) */}
-        <div className="flex flex-wrap items-center gap-4 mb-6 border-b pb-4">
-          <div className="flex bg-gray-100 p-1 rounded-xl">
+        {/* MENU & FILTER: GAP DIKECILIN */}
+        <div className="flex flex-wrap items-center gap-4 mb-5 border-b border-slate-100 pb-5">
+          {/* MENU INTERNAL/EKSTERNAL */}
+          <div className="flex bg-slate-100 p-1.5 rounded-2xl">
             {menus.map(m => (
-              <button key={m} onClick={() => { setSelectedMenu(m); if(m === 'Eksternal') setInternalAccessGranted(false); }} className={`px-4 py-1.5 rounded-lg font-bold text-[10px] uppercase tracking-wider transition-all ${selectedMenu === m ? 'bg-white text-blue-700 shadow-sm' : 'text-gray-400'}`}>{m}</button>
+              <button 
+                key={m} 
+                onClick={() => { setSelectedMenu(m); if(m === 'Eksternal') setInternalAccessGranted(false); }} 
+                className={`px-8 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all duration-200 ${
+                  selectedMenu === m 
+                  ? (m === 'Internal' ? 'bg-red-600 text-white shadow-md scale-[1.02]' : 'bg-blue-700 text-white shadow-md scale-[1.02]')
+                  : (m === 'Internal' ? 'text-slate-500 hover:text-red-600 hover:bg-white' : 'text-slate-500 hover:text-blue-700 hover:bg-white')
+                }`}
+              >
+                {m}
+              </button>
             ))}
           </div>
-          <div className="hidden md:block h-6 w-px bg-gray-200 mx-2"></div>
+
+          <div className="hidden md:block h-8 w-px bg-slate-200 mx-1"></div>
+
+          {/* KATEGORI FILTERS */}
           <div className="flex gap-2 overflow-x-auto no-scrollbar py-1">
             {categories.map(c => (
-              <button key={c} onClick={() => setSelectedCategory(c)} className={`px-4 py-1.5 rounded-full whitespace-nowrap font-bold text-[9px] tracking-widest uppercase transition-all border ${selectedCategory === c ? 'bg-blue-700 text-white border-blue-700' : 'bg-white text-gray-400 hover:border-blue-200'}`}>{c}</button>
+              <button 
+                key={c} 
+                onClick={() => setSelectedCategory(c)} 
+                className={`px-7 py-2.5 rounded-xl whitespace-nowrap font-bold text-[11px] tracking-wider uppercase transition-all duration-200 border-2 ${
+                  selectedCategory === c 
+                  ? 'bg-slate-800 text-white border-slate-800 shadow-md scale-[1.02]' 
+                  : 'bg-white text-slate-400 border-slate-100 hover:border-slate-300 hover:text-slate-700'
+                }`}
+              >
+                {c}
+              </button>
             ))}
           </div>
         </div>
 
         {selectedMenu === 'Internal' && !internalAccessGranted ? (
-          <div className="max-w-md mx-auto bg-white p-12 rounded-[3rem] shadow-2xl border text-center mt-6">
-            <h2 className="text-2xl font-black text-gray-800 mb-2">Restricted Area</h2>
-            <p className="text-gray-400 mb-8 text-sm text-center">Masukkan password akses internal.</p>
+          <div className="max-w-md mx-auto bg-white p-10 rounded-3xl shadow-xl border border-slate-100 text-center mt-4">
+            <h2 className="text-2xl font-bold text-slate-800 mb-2 tracking-tight">Restricted Area</h2>
+            <p className="text-slate-400 mb-8 text-sm">Akses khusus karyawan Internal Bank BTN.</p>
             <form onSubmit={handlePasswordSubmit} className="space-y-4">
-              <input type="password" placeholder="Kode Akses" className="w-full p-4 bg-gray-50 rounded-2xl text-center font-bold" value={passwordInput} onChange={e => setPasswordInput(e.target.value)} />
-              {passwordError && <p className="text-red-500 text-[10px] font-black text-center">{passwordError}</p>}
-              <button className="w-full bg-blue-700 text-white py-4 rounded-2xl font-black text-center">BUKA AKSES</button>
+              <input type="password" placeholder="Kode Akses" className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-center font-bold" value={passwordInput} onChange={e => setPasswordInput(e.target.value)} />
+              {passwordError && <p className="text-red-600 text-xs font-bold uppercase">{passwordError}</p>}
+              <button className="w-full bg-red-600 text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-red-700 transition-all">BUKA AKSES</button>
             </form>
           </div>
         ) : (
           <>
-            {/* SEARCH BAR (FIXED) */}
-            <div className="relative mb-12 flex items-center">
-              <div className="absolute left-5 flex items-center pointer-events-none">
-                <Search className="text-gray-300" size={24} />
-              </div>
-              <input placeholder="Cari materi atau data..." className="w-full pl-14 pr-6 py-4 rounded-[1.5rem] border outline-none focus:ring-2 focus:ring-blue-600 bg-white shadow-xl shadow-gray-200/50 text-lg font-medium" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {/* SEARCH BAR: GAP ANTAR INTERAKSI DIRAPATKAN */}
+ <div className="relative mb-8 flex items-center">
+  {/* Ikon Kaca Pembesar - Ukurannya juga ditambah (size={28}) */}
+  <div className="absolute left-6 flex items-center pointer-events-none">
+    <Search className="text-slate-300" size={28} />
+  </div>
+  
+  <input 
+    placeholder="Cari materi atau data operasional..." 
+    className="w-full pl-16 pr-8 py-6 rounded-[2rem] border border-slate-200 outline-none focus:ring-2 focus:ring-blue-600 bg-white shadow-2xl shadow-slate-200/50 text-2xl font-semibold placeholder:text-slate-300 transition-all" 
+    value={searchTerm} 
+    onChange={e => setSearchTerm(e.target.value)} 
+  />
+</div>
+            {/* DOCUMENT GRID */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredDocs.map(doc => (
-                <div key={doc.id} className="group bg-white rounded-[2.5rem] shadow-sm border border-gray-50 overflow-hidden hover:shadow-2xl transition-all duration-500">
-                  <div className="h-56 bg-gray-100 relative">
-                    <img src={doc.thumbnail || 'https://via.placeholder.com/600x400'} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="doc" />
-                    <div className={`absolute top-5 right-5 p-3 rounded-2xl shadow-xl backdrop-blur-xl ${getFileColor(doc.type)}`}>{getFileIcon(doc.type)}</div>
-                  </div>
-                  <div className="p-8">
-                    <div className="flex items-center gap-3 mb-4">
-                       <span className="text-[9px] font-black uppercase tracking-widest text-blue-700 bg-blue-50 px-3 py-1 rounded-lg border border-blue-100">{doc.category}</span>
+                <div key={doc.id} className="group bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-2xl transition-all duration-300">
+                  <div className="h-52 bg-slate-100 relative overflow-hidden">
+                    <img src={doc.thumbnail || 'https://via.placeholder.com/600x400'} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="doc" />
+                    <div className={`absolute top-4 right-4 p-2.5 rounded-xl shadow-lg backdrop-blur-md border border-white/20 ${getFileColor(doc.type)}`}>
+                      {getFileIcon(doc.type)}
                     </div>
-                    <h3 className="font-black text-xl text-gray-800 mb-2 line-clamp-1 group-hover:text-blue-700 transition-colors">{doc.title}</h3>
-                    <p className="text-gray-400 text-sm mb-8 line-clamp-2 leading-relaxed">{doc.description}</p>
-                    <button onClick={() => window.open(doc.download_url, '_blank')} className="w-full flex items-center justify-center gap-3 bg-gray-900 text-white py-4 rounded-[1.25rem] font-black text-[10px] tracking-widest uppercase hover:bg-blue-700 transition-all shadow-xl active:scale-95">
+                  </div>
+                  <div className="p-7">
+                    <div className="flex items-center gap-2 mb-3">
+                       <span className="text-[10px] font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-3 py-1 rounded-lg border border-blue-100">{doc.category}</span>
+                       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{doc.type}</span>
+                    </div>
+                    <h3 className="font-bold text-xl text-slate-800 mb-2 line-clamp-1 group-hover:text-blue-700 transition-colors tracking-tight">{doc.title}</h3>
+                    <p className="text-slate-500 text-sm mb-6 line-clamp-2 leading-relaxed">{doc.description}</p>
+                    <button onClick={() => window.open(doc.download_url, '_blank')} className="w-full flex items-center justify-center gap-3 bg-slate-800 text-white py-4 rounded-2xl font-bold text-xs tracking-widest uppercase hover:bg-blue-700 transition-all shadow-lg active:scale-95">
                       <Download size={18} /> Unduh Materi
                     </button>
                   </div>
@@ -369,8 +386,8 @@ const DocumentHub = () => {
         )}
       </main>
       
-      <footer className="text-center py-16 opacity-30">
-         <p className="text-[9px] font-black tracking-[0.5em] uppercase text-gray-500">Official Hub — &copy; 2026 MBG Program — Bank BTN</p>
+      <footer className="text-center py-12 border-t border-slate-50 mt-10">
+         <p className="text-[10px] font-bold tracking-[0.4em] uppercase text-slate-300">&copy; 2026 MBG Program — pt. bank tabungan negara (persero) tbk</p>
       </footer>
     </div>
   );
