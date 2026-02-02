@@ -201,6 +201,7 @@ const DocumentHub = () => {
     <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
       <Toaster position="top-right" />
       
+      {/* HEADER */}
       <header className="bg-white border-b sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <div>
@@ -221,17 +222,18 @@ const DocumentHub = () => {
         </div>
       )}
 
+      {/* ADMIN PANEL */}
       {isAdmin && showAdminPanel && (
         <div className="max-w-7xl mx-auto p-6 bg-white border-b shadow-sm">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-lg font-bold">Database Dokumen</h2>
-            <button onClick={() => setShowDocForm(true)} className="bg-blue-600 text-white px-5 py-2 rounded-xl flex gap-2 items-center hover:bg-blue-700 font-bold text-sm shadow-lg shadow-blue-100">
+            <button onClick={() => setShowDocForm(true)} className="bg-blue-600 text-white px-5 py-2 rounded-xl flex gap-2 items-center hover:bg-blue-700 font-bold text-sm">
               <Plus size={18} /> Tambah Data
             </button>
           </div>
           <div className="grid grid-cols-1 gap-2 max-h-60 overflow-y-auto pr-2">
             {documents.map(doc => (
-              <div key={doc.id} className="flex justify-between items-center p-3 bg-gray-50 rounded-xl border border-gray-100">
+              <div key={doc.id} className="flex justify-between items-center p-3 bg-gray-50 rounded-xl border">
                 <div className="flex flex-col">
                   <span className="font-bold text-sm">{doc.title}</span>
                   <span className="text-[9px] text-gray-400 uppercase font-black">{doc.menu} • {doc.category}</span>
@@ -246,6 +248,7 @@ const DocumentHub = () => {
         </div>
       )}
 
+      {/* MODAL FORM (FIXED SCROLL) */}
       {showDocForm && (
         <div className="fixed inset-0 bg-blue-900/40 backdrop-blur-sm flex items-start justify-center z-[60] p-4 overflow-y-auto">
           <div className="bg-white p-8 rounded-[2rem] max-w-2xl w-full my-8 shadow-2xl relative border">
@@ -255,17 +258,8 @@ const DocumentHub = () => {
             </div>
             
             <form onSubmit={handleSaveDocument} className="space-y-6 pb-6">
-              <div className="space-y-4">
-                <div>
-                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Nama Dokumen</label>
-                  <input className="w-full p-3.5 bg-gray-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-500" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} required />
-                </div>
-                <div>
-                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Keterangan</label>
-                  <textarea className="w-full p-3.5 bg-gray-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-500" rows="2" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} />
-                </div>
-              </div>
-
+              <input placeholder="Nama Dokumen" className="w-full p-3.5 bg-gray-50 border rounded-2xl outline-none" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} required />
+              <textarea placeholder="Keterangan" className="w-full p-3.5 bg-gray-50 border rounded-2xl outline-none" rows="2" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} />
               <div className="grid grid-cols-2 gap-4">
                 <select className="p-3.5 bg-gray-50 border rounded-2xl outline-none" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})}>
                   {categories.filter(c => c !== 'All').map(c => <option key={c} value={c}>{c}</option>)}
@@ -274,7 +268,6 @@ const DocumentHub = () => {
                   <option value="pdf">PDF</option><option value="ppt">PPT</option><option value="excel">Excel</option>
                 </select>
               </div>
-
               <select className="w-full p-3.5 bg-gray-50 border rounded-2xl outline-none font-bold text-blue-700" value={formData.menu} onChange={e => setFormData({...formData, menu: e.target.value})}>
                 <option value="Internal">INTERNAL ACCESS</option><option value="Eksternal">PUBLIC ACCESS</option>
               </select>
@@ -282,11 +275,9 @@ const DocumentHub = () => {
               <div className="p-6 border-2 border-dashed border-blue-100 rounded-[2rem] bg-blue-50/30">
                  <span className="text-[10px] font-black text-blue-600 block mb-3 uppercase tracking-widest">Opsi A: Upload File (Max 40MB)</span>
                  <input type="file" className="text-xs w-full text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-blue-600 file:text-white" onChange={e => setDocumentFile(e.target.files[0])} />
-                 
                  <div className="flex items-center gap-3 my-4"><div className="h-px bg-blue-100 flex-1"></div><span className="text-[9px] text-blue-300 font-black">ATAU</span><div className="h-px bg-blue-100 flex-1"></div></div>
-                 
                  <span className="text-[10px] font-black text-blue-600 block mb-3 uppercase tracking-widest">Opsi B: Link Google Drive</span>
-                 <input placeholder="https://drive.google.com/..." className="w-full p-3.5 bg-white border rounded-2xl text-sm outline-none focus:ring-2 focus:ring-blue-500" value={formData.download_url} onChange={e => setFormData({...formData, download_url: e.target.value})} />
+                 <input placeholder="https://drive.google.com/..." className="w-full p-3.5 bg-white border rounded-2xl text-sm outline-none" value={formData.download_url} onChange={e => setFormData({...formData, download_url: e.target.value})} />
               </div>
 
               <div className="p-5 border rounded-[2rem] bg-white">
@@ -294,7 +285,7 @@ const DocumentHub = () => {
                 <input type="file" accept="image/*" onChange={e => setThumbnailFile(e.target.files[0])} />
               </div>
 
-              <button type="submit" disabled={uploadingFile} className="w-full bg-blue-700 text-white py-4 rounded-2xl font-black text-xs tracking-widest shadow-xl shadow-blue-100 active:scale-95">
+              <button type="submit" disabled={uploadingFile} className="w-full bg-blue-700 text-white py-4 rounded-2xl font-black text-xs tracking-widest">
                 {uploadingFile ? 'MEMPROSES...' : 'PUBLIKASIKAN DOKUMEN'}
               </button>
             </form>
@@ -302,55 +293,56 @@ const DocumentHub = () => {
         </div>
       )}
 
+      {/* ADMIN LOGIN */}
       {showAdminLogin && (
         <div className="fixed inset-0 bg-blue-950/80 backdrop-blur-md flex items-center justify-center z-[70] p-4">
           <div className="bg-white p-8 rounded-[2.5rem] w-full max-w-sm shadow-2xl">
             <h2 className="font-black text-xl text-center mb-6">System Access</h2>
             <form onSubmit={handleAdminLogin} className="space-y-4">
-              <input autoFocus type="password" placeholder="••••••••" className="w-full p-4 bg-gray-50 rounded-2xl text-center text-2xl tracking-[0.5em] outline-none border focus:ring-2 focus:ring-blue-500" value={adminPassword} onChange={e => setAdminPassword(e.target.value)} />
-              <button type="submit" className="w-full bg-blue-700 text-white py-4 rounded-2xl font-black tracking-widest text-xs">LOGIN</button>
+              <input autoFocus type="password" placeholder="••••••••" className="w-full p-4 bg-gray-50 rounded-2xl text-center text-2xl tracking-[0.5em] outline-none border" value={adminPassword} onChange={e => setAdminPassword(e.target.value)} />
+              <button type="submit" className="w-full bg-blue-600 text-white py-2.5 rounded-xl font-bold">LOGIN</button>
               <button type="button" onClick={() => setShowAdminLogin(false)} className="w-full text-gray-400 text-[10px] font-bold uppercase py-2">Batal</button>
             </form>
           </div>
         </div>
       )}
 
+      {/* MAIN CONTENT AREA */}
       <main className="max-w-7xl mx-auto p-4 sm:p-10">
-        <div className="flex bg-white p-2 rounded-2xl shadow-sm mb-10 border inline-flex">
-          {menus.map(m => (
-            <button key={m} onClick={() => { setSelectedMenu(m); if(m === 'Eksternal') setInternalAccessGranted(false); }} className={`px-10 py-3 rounded-xl font-black text-xs tracking-widest uppercase transition-all ${selectedMenu === m ? 'bg-blue-700 text-white shadow-lg' : 'text-gray-400'}`}>{m}</button>
-          ))}
+        
+        {/* COMPACT NAV (ONE LINE) */}
+        <div className="flex flex-wrap items-center gap-4 mb-6 border-b pb-4">
+          <div className="flex bg-gray-100 p-1 rounded-xl">
+            {menus.map(m => (
+              <button key={m} onClick={() => { setSelectedMenu(m); if(m === 'Eksternal') setInternalAccessGranted(false); }} className={`px-4 py-1.5 rounded-lg font-bold text-[10px] uppercase tracking-wider transition-all ${selectedMenu === m ? 'bg-white text-blue-700 shadow-sm' : 'text-gray-400'}`}>{m}</button>
+            ))}
+          </div>
+          <div className="hidden md:block h-6 w-px bg-gray-200 mx-2"></div>
+          <div className="flex gap-2 overflow-x-auto no-scrollbar py-1">
+            {categories.map(c => (
+              <button key={c} onClick={() => setSelectedCategory(c)} className={`px-4 py-1.5 rounded-full whitespace-nowrap font-bold text-[9px] tracking-widest uppercase transition-all border ${selectedCategory === c ? 'bg-blue-700 text-white border-blue-700' : 'bg-white text-gray-400 hover:border-blue-200'}`}>{c}</button>
+            ))}
+          </div>
         </div>
 
         {selectedMenu === 'Internal' && !internalAccessGranted ? (
           <div className="max-w-md mx-auto bg-white p-12 rounded-[3rem] shadow-2xl border text-center mt-6">
             <h2 className="text-2xl font-black text-gray-800 mb-2">Restricted Area</h2>
-            <p className="text-gray-400 mb-8 text-sm">Masukkan password akses internal.</p>
+            <p className="text-gray-400 mb-8 text-sm text-center">Masukkan password akses internal.</p>
             <form onSubmit={handlePasswordSubmit} className="space-y-4">
-              <input type="password" placeholder="Kode Akses" className="w-full p-4 bg-gray-50 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 text-center font-bold" value={passwordInput} onChange={e => setPasswordInput(e.target.value)} />
-              {passwordError && <p className="text-red-500 text-[10px] font-black tracking-widest">{passwordError}</p>}
-              <button className="w-full bg-blue-700 text-white py-4 rounded-2xl font-black tracking-widest text-xs">BUKA AKSES</button>
+              <input type="password" placeholder="Kode Akses" className="w-full p-4 bg-gray-50 rounded-2xl text-center font-bold" value={passwordInput} onChange={e => setPasswordInput(e.target.value)} />
+              {passwordError && <p className="text-red-500 text-[10px] font-black text-center">{passwordError}</p>}
+              <button className="w-full bg-blue-700 text-white py-4 rounded-2xl font-black text-center">BUKA AKSES</button>
             </form>
           </div>
         ) : (
           <>
-            <div className="flex gap-2 mb-10 overflow-x-auto pb-4 no-scrollbar">
-              {categories.map(c => (
-                <button key={c} onClick={() => setSelectedCategory(c)} className={`px-8 py-2.5 rounded-full whitespace-nowrap font-black text-[10px] tracking-widest uppercase transition-all border ${selectedCategory === c ? 'bg-blue-700 text-white border-blue-700' : 'bg-white text-gray-400'}`}>{c}</button>
-              ))}
-            </div>
-
-            {/* SEARCH BAR FIX - PENGGUNAAN FLEX DAN ALIGN ITEMS CENTER */}
+            {/* SEARCH BAR (FIXED) */}
             <div className="relative mb-12 flex items-center">
               <div className="absolute left-5 flex items-center pointer-events-none">
                 <Search className="text-gray-300" size={24} />
               </div>
-              <input 
-                placeholder="Cari materi atau data operasional..." 
-                className="w-full pl-14 pr-6 py-5 rounded-[1.5rem] border-none outline-none focus:ring-2 focus:ring-blue-600 bg-white shadow-xl shadow-gray-200/50 text-lg font-medium placeholder:text-gray-300" 
-                value={searchTerm} 
-                onChange={e => setSearchTerm(e.target.value)} 
-              />
+              <input placeholder="Cari materi atau data..." className="w-full pl-14 pr-6 py-4 rounded-[1.5rem] border outline-none focus:ring-2 focus:ring-blue-600 bg-white shadow-xl shadow-gray-200/50 text-lg font-medium" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
