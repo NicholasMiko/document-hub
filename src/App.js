@@ -345,19 +345,17 @@ const DocumentHub = () => {
         ) : (
           <>
             {/* SEARCH BAR: GAP ANTAR INTERAKSI DIRAPATKAN */}
- <div className="relative mb-8 flex items-center">
-  {/* Ikon Kaca Pembesar - Ukurannya juga ditambah (size={28}) */}
-  <div className="absolute left-6 flex items-center pointer-events-none">
-    <Search className="text-slate-300" size={28} />
-  </div>
-  
-  <input 
-    placeholder="Cari materi atau data operasional..." 
-    className="w-full pl-16 pr-8 py-6 rounded-[2rem] border border-slate-200 outline-none focus:ring-2 focus:ring-blue-600 bg-white shadow-2xl shadow-slate-200/50 text-2xl font-semibold placeholder:text-slate-300 transition-all" 
-    value={searchTerm} 
-    onChange={e => setSearchTerm(e.target.value)} 
-  />
-</div>
+<div className="relative mb-8 flex items-center">
+              <div className="absolute left-5 flex items-center pointer-events-none">
+                <Search className="text-gray-300" size={24} />
+              </div>
+              <input 
+                placeholder="Cari materi atau data..." 
+                className="w-full pl-14 pr-6 py-4 rounded-2xl border-2 border-gray-100 outline-none focus:border-blue-500 bg-white text-lg font-medium placeholder:text-gray-300 transition-colors" 
+                value={searchTerm} 
+                onChange={e => setSearchTerm(e.target.value)} 
+              />
+            </div>
             {/* DOCUMENT GRID */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredDocs.map(doc => (
