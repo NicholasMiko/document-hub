@@ -167,15 +167,32 @@ const DocumentHub = () => {
 
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
+    setPasswordError('');
+
     try {
-      if (passwordInput === 'btn2026') { 
+      // Kita panggil API yang lo deploy di Vercel (Edge Function)
+      const response = await fetch('/api/check-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          password: passwordInput,
+          type: 'internal' 
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
         setInternalAccessGranted(true);
         toast.success('Akses dibuka!');
       } else {
-        setPasswordError('Password salah!');
+        // Jika password salah (Vercel respon 401 atau success: false)
+        setPasswordError(data.message || 'Password salah!');
       }
     } catch (err) {
-      setPasswordError('Gagal koneksi');
+      // Jika internet putus atau API Vercel lo mati (500 Error)
+      setPasswordError('Gagal koneksi ke server');
+      toast.error('Gagal menghubungkan ke server');
     }
   };
 
